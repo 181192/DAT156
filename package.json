@@ -10,6 +10,8 @@
     "prod": "vuepress build"
   },
   "dependencies": {
-    "vuepress": "^0.14.8"
+    "material-design-icons-iconfont": "^4.0.4",
+    "vuepress": "^0.14.8",
+    "vuetify": "^1.4.1"
   }
 }
