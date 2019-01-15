@@ -5,7 +5,11 @@ date: '2019-01-01'
 
 # Uke 1 - Vue og AngularJS
 
-## Torsdag og fredag
+## Fredag
+
+Jeg fikk laget en funksjonalitet slik at når man skriver inn fødselsnummeret i input feltet i skjemaet blir det hentet resten av detaljene til kunden. Jeg jobbet også med å lage ett _directive_ som sjekker mens man skriver inn om fødselsnummeret er riktig
+
+## Torsdag
 
 Jobber videre med det grafiske, og starter med å lage _eventer_ for å sende signaler rundt i applikasjonen når man trykker på de ulike knappene. Det er også ett skjema hvor kunde detaljer skal fylles ut, enten for å lage en ny bruker eller redigere en eksisterende. Så det må lages logikk at når en knapp trykkes åpnes det en modal med skjemaet, også skal det lukkes når man enten trykker avbryt eller submit (da skal også dataene sendes).
 
