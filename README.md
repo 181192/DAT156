@@ -1,8 +1,8 @@
 ---
 home: true
 heroImage: /images/vuejs.png
-actionText: Bloggen ->
-actionLink: /blogg/
+actionText: Bloggen →
+actionLink: /blogg/uke1/
 features:
   - title: Bla bla blab la
     details: blab lbalblablabl al balba la balbabla
@@ -10,7 +10,9 @@ features:
     details: lorem  ipsum
   - title: HAve fun?
     details: sdfsfsdfsdfsd sdf sdfsfd sdf sdf s fs dfs
-footer: Copyright 2019 Kalli
+  - title: HAve fun?
+    details: sdfsfsdfsdfsd sdf sdfsfd sdf sdf s fs dfs
+footer: Copyright © 2019 Kalli
 ---
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed ipsum maximus, volutpat justo in, ullamcorper purus. Etiam sapien nulla, finibus id nisi a, accumsan euismod elit. Nunc auctor ut lacus quis tempus. Pellentesque finibus ut nulla at finibus. Nam porttitor sodales finibus. Fusce efficitur risus eget sodales commodo.
