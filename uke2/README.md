@@ -5,6 +5,10 @@ date: '2019-01-07'
 
 # Uke 2 - Postman, Azure og Kubernetes
 
+::: tip Timer
+Antall timer: 40 :tada:
+:::
+
 ## Fredag
 
 Jeg fikk endelig tak i ett Azure Subscription og kunne begynne å teste i skyen. Jeg fikk Ansible Playbooken til å fungere ved å opprette og slette ett Azure Container Registry (ACR). Det er bra, en kommando for å sette opp alt, og en for å ta ned alt.

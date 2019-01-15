@@ -5,6 +5,10 @@ date: '2019-01-01'
 
 # Uke 1 - Vue og AngularJS
 
+::: tip Timer
+Antall timer: 27 :tada:
+:::
+
 ## Fredag
 
 Jeg fikk laget en funksjonalitet slik at når man skriver inn fødselsnummeret i input feltet i skjemaet blir det hentet resten av detaljene til kunden. Jeg jobbet også med å lage ett _directive_ som sjekker mens man skriver inn om fødselsnummeret er riktig
