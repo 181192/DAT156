@@ -1,15 +1,22 @@
 module.exports = {
   title: 'DAT156',
   base: '/DAT156/',
-  description: 'DAT156 Praksis i arbeidslivet for data',
+  description: 'Praksis i arbeidslivet for data @ stacc',
   themeConfig: {
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'GitHub', link: '/' },
-      { text: 'Stacc', link: '/' }
+      { text: 'Hjem', link: '/' },
+      { text: 'GitHub', link: 'https://github.com/181192/DAT156' },
+      { text: 'Stacc', link: 'https://stacc.com/' }
     ],
     sidebar: {
-      '/blogg/': ['', 'frontend', 'backend']
+      '/blogg/': ['uke1/', 'uke2/', 'uke3/']
+    },
+    lastUpdated: 'Sist oppdatert',
+    serviceWorker: {
+      updatePopup: {
+        message: 'Nytt innhold tilgjengelig.',
+        buttonText: 'Oppdater'
+      }
     }
   }
 }
