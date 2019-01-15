@@ -6,7 +6,7 @@ date: '2019-01-01'
 # Uke 1 - Vue og AngularJS
 
 ::: tip Timer
-Antall timer: 27 :tada:
+Denne uken: 27 :tada:
 :::
 
 ## Fredag

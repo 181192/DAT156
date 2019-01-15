@@ -6,7 +6,9 @@ date: '2019-01-07'
 # Uke 2 - Postman, Azure og Kubernetes
 
 ::: tip Timer
-Antall timer: 40 :tada:
+Denne uken: 40
+
+**Totalt: 67** :tada:
 :::
 
 ## Fredag
