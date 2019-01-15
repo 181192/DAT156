@@ -1,17 +1,11 @@
 ---
-home: true
-heroImage: /images/vuejs.png
-actionText: Bloggen →
-actionLink: /blogg/uke1/
-features:
-  - title: 216 timer
-    details: En blogg om mine 216 første timer hos Stacc Insight AS
-  - title: Spennende teknologier
-    details: Vue, AngularJS, Java, Docker, Kubernetes
-  - title: Godt miljø
-    details: Godt arbeidsmiljø, gode kollegaer og tidenes lunsj
-footer: Copyright © 2019 Kalli
+title: Hjem
+date: '2019-01-02'
+categories: main
 ---
+
+<BlogPosts />
+
 <p align="center">
 <img :src="$withBase('/images/stacc_logo_payoff_bright-bg_big.png')" alt="stacc logo" width="75%">
 </p>
