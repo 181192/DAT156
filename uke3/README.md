@@ -5,6 +5,97 @@ date: '2019-01-09'
 
 # Uke 3 - Veien mot skyene
 
+::: tip Timer
+Denne uken: 26 (syk to dager)
+
+**Totalt: 93** :tada:
+:::
+
+[[toc]]
+
+## Fredag
+
+I dag ble tiden brukt på å se på monitorering av Kubernetes klusteret og Tomcat serveren som kjører applikasjonen.
+
+### Ulike nivåer av monitorering
+
+::: warning Det er ulike nivåer vi ønsker å kunne monitorere og logge på:
+
+1. Infrastruktur nivå
+2. Kubernetes nivå
+3. Tomcat / JVM nivå
+4. Applikasjonsnivået
+
+:::
+
+På infrastruktur nivået ønsker vi å få informasjon om hvor mange ressurser vi har i Azure, som VM instanser og Kubernetes klustre.
+
+På Kubernetes nivået ønsker vi oversikt over blandt annet CPU, minnebruk, fillagring og nettverks bruk for selve klusteret. Men vi ønsker også detaljert informasjon om hver enkelt Pod.
+
+På Tomcat og JVM nivået ønsker vi detaljert informasjon om for eksempel hvor mange tråder som kjører, hvor mange feilmeldinger, telle antall forespørsler mot hvert enkelt REST-endpoint for eksempel `/location`, hvor mye minne JVM'en bruker.
+
+Og til slutt på Applikasjons laget så ønsker vi å kunne analysere loggene, indeksere de, og kunne søke og prosessere loggene.
+
+### Prometheus og Grafana
+
+[Prometheus](https://prometheus.io/) er et monitorerings system og en tidsseriedatabase. Prometheus er gode på dataer som man monitorerer, for eksempel CPU og minnebruk. For applikasjons logger, der vi må analysere innholdet må vi bruke andre alternativer som ELK-stacken (Elasticsearch). Det finnes også en mer lettvekt løsning for logger til Prometheus også, [Loki](https://github.com/grafana/loki), som er laget av Grafana.
+
+[Grafana](https://grafana.com/) er ett verktøy for å data visualisering og monitorering, som man bruker sammen med tjenester som Prometheus, Elasticsearch og InfluxDB.
+
+Både Kubernetes og Docker har innebygget støtte for Prometheus, og med Kubernetes så vil Prometheus kunne oppdage tjenestene selv (self-discovering) som er svært viktig når ressursene i Kubernetes blir laget dynamisk.
+
+### JMX Exporter, Java Agent og `premain`
+
+For å kunne monitorere Tomcat serveren vi må servere dataene til Prometheus over HTTP, og skal vi dra nytte av Kubernetes sin støtte til Prometheus må monitorerings dataene bli servert på `/metrics`. Siden vi har mye eksisterende kode, er det nødvendig å finne en løsning slik at vi kan monitorere applikasjone uten å måtte endre den eksisterende kodebasen. Her kommer vi over Java Agent.
+
+::: tip Java Agent
+
+En Java agent er en vanlig Java klasse med litt strengere regler, den må implementere metoden:
+
+```java
+public static void premain(String agentArgs, Instrumentation inst)
+```
+
+`premain` metoden blir en _agent entry point_, lignende den vanlige `main` vi er vandt med i vanlige Java applikasjoner.
+
+Når Java Virtuell Maskin (JVM) har blitt initialisert, vil hver `premain(String agentArgs, Instrumentation inst)` bli kalt i den rekkefølgen agentene ble spesifisert når JVM'en startet. Når alle `premain` metodene er initialisert vil den ekte Java applikasjon `main` metoden bli kalt.
+:::
+
+#### JMX Exporter
+
+Prometheus har heldigvis laget en [JMX Exporter](https://github.com/prometheus/jmx_exporter) som kjøres som en Java Agent og serverer _metrics_ på `url:port/metrics`, denne tar hånd om de fleste JVM målingene vi er interessert i, og prosjektet ligger åpen på GitHub så her kan vi også videre utvikle etter vårt eget behov.
+
+JMX Exporter prosjektet har også ett [Grafana dashboard](https://grafana.com/dashboards/3457) som vi kan bruke til å videre utvikle.
+
+### Kubernetes og Prometheus
+
+Jeg kom over ett [Kubernetes oppsett for Prometheus og Grafana](https://github.com/giantswarm/prometheus) som jeg kunne kjapt teste litt ut. Målet her er at vi også skal kjøre Prometheus i selve Kubernetes klusteret.
+
+Prosjektet er satt opp med en fin _one-liner quick install_ som setter opp alt under namespacet `monitoring` i det eksisterende klusteret vårt:
+
+```bash
+kubectl apply \
+  --filename https://raw.githubusercontent.com/giantswarm/kubernetes-prometheus/master/manifests-all.yaml
+```
+
+Så kan vi videre sende porten inni klusteret til vår lokale maskin ved å kjøre kommandoen:
+
+```bash
+kubectl port-forward --namespace=monitoring grafana-core 3000:3000
+```
+
+Åpner vi `http://localhost:3000` på maskinen vil vi kunne se Grafana dashboardet
+
+### Videre
+
+Jobben videre blir å knytte sammen applikasjonen vår og Prometheus i Kubernetes klusteret. For å få dette til må vi konfigurere Prometheus Annotations i Helm sin deployment fil. I metadata seksjonen under template i spec seksjonen må vi definere tre variabler:
+
+- `prometheus.io/scrape`: Om Prometheus skal skrape Pod'en
+- `prometheus.io/path`: Hvilken sti _metrics_ vil bli servert på (standard `/metrics`)
+- `prometheus.io/port`: Hvilken port Prometheus skal skrape på.
+
+Neste uke, på mandag, skal jeg og ett par fra teamet mitt, samt Kubernetes eksperten fra tidligere i uken, ta et møte for å gå igjennom og se hvor langt vi har kommet i prosjektet. Hva som gjenstår, hva som er gjort og hvor vi ønsker å bevege oss videre.
+
 ## Torsdag
 
 Jeg fikk testet ut Azure Pipeline i dag. Sammenkoblingen mot ACR og AKS er smertefritt, alt er integrert i løsninen via en grafisk pipeline bygger. Men jeg fikk ett stort problem, i vår løsning med mono-repo og thrunk-based master er vi avhenging av `git tags` som versjonerer kodebasen etterhvert som Jenkins bygger prosjektet og byggingen blir vellyket. Denne metodikken ønsker vi å fortsette med, siden vi da kan bruke taggen fra git til å tagge docker imaget.
