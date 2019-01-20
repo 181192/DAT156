@@ -59,6 +59,8 @@ public static void premain(String agentArgs, Instrumentation inst)
 `premain` metoden blir en _agent entry point_, lignende den vanlige `main` vi er vandt med i vanlige Java applikasjoner.
 
 Når Java Virtuell Maskin (JVM) har blitt initialisert, vil hver `premain(String agentArgs, Instrumentation inst)` bli kalt i den rekkefølgen agentene ble spesifisert når JVM'en startet. Når alle `premain` metodene er initialisert vil den ekte Java applikasjon `main` metoden bli kalt.
+
+Med denne metoden kan man injisere og modifisere eksisterende kode, ved å manipulere byte-koden. Her er det laget noen rammeverk, men i korte trekk blir det lagt til ekstra kode i for eksempel Interfacet `javax.servlet.Servlet`. Hvor vi da kan lytte på Servletene og telle for mange forespørsler det kommer til for eksempel `/eksempel`.
 :::
 
 #### JMX Exporter
