@@ -1,6 +1,6 @@
 ---
 title: Uke 4 - Dypt inn i skyene
-date: '2019-01-09'
+date: '2019-01-21'
 ---
 
 # Uke 4 - Dypt inn i skyene
