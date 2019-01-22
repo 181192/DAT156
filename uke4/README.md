@@ -5,6 +5,47 @@ date: '2019-01-21'
 
 # Uke 4 - Dypt inn i skyene
 
+## Tirsdag
+
+Jobbet i dag med Azure Artifacts og Bitbucket Pipelines. Planen er å få deployet noen av kjerne bibliotekene vi bruker mest opp i Azure Artifacts. Jeg har pekt meg ut to biblioteker (en for backend og den andre for frontend) og en _`parent pom.xml`_ som holder kontroll over versjonene av fleste Maven dependencies som er felles for mange av modulene.
+
+Jeg begynte med å sette opp en _Feed_ som det er kalt i Azure Artifacts. Denne _feed'en_ kan man hente og publisere Maven artefaktene til. Det som kreves er at man definerer `<servers>` i `settings.xml` filen til Maven på maskinen, slik at Maven vil hente fra Azure Artifacts først og ha fallback til Maven Central Repo. Deretter definerer man en repository inni `<repositories>` og `<distributionManagment>` taggene i `pom.xml` i prosjeket som skal benytte seg av artefaktene.
+
+```xml
+<repository>
+  <id>dev-azure-com-${company}-${feed}</id>
+  <url>https://pkgs.dev.azure.com/${company}/_packaging/${feed}/maven/v1</url>
+  <releases>
+    <enabled>true</enabled>
+  </releases>
+  <snapshots>
+    <enabled>true</enabled>
+  </snapshots>
+</repository>
+```
+
+Deretter begynte jeg med _Parent pom_ prosjektet å sette opp Bitbucket Pipeline. Det viste seg å være mye problemer med å få Maven Release plugin til å fungere ordentlig. Slik Maven Release plugin fungerer bygger den prosjeket, laster opp en RELEASE artefakt til Azure Artifacs, commiter en ny versjon i `pom.xml` og tagger commiten med samme versjonsnummer. Deretter commiter den engang til for å sette versjonen i `pom.xml` til en SNAPSHOT release. Når jeg først satte igang fikk jeg ikke Maven Release plugin til å commite, den feilet gang på gang.
+
+::: danger Det var flere grunner til at det ikke fungerte
+
+1. Bitbucket bruker en spesial SSH url for Bitbucket Pipelines som må settes med en miljø variabel.
+2. Maven Release plugin bruker `git status --porcelain` til å sjekke status. Den feiler å lese output dersom miljø variabelen `LANG` på maskinen ikke er satt til `en_US.UTF-8`
+3. Maven kjører i docker, og er satt opp til at `settings.xml` filen må hete `settings-docker.xml` og ligge på `/usr/share/maven/ref/settings-docker.xml`.
+
+```bash
+LANG='en_US.UTF-8' mvn -B \
+  -s /usr/share/maven/ref/settings-docker.xml \
+  release:clean \
+  release:prepare \
+  release:perform \
+  -Dbitbucket.url=${BITBUCKET_GIT_SSH_ORIGIN}
+```
+
+:::
+
+Slik ser git loggen ut etter en release:
+![commits](./commits.png)
+
 ## Mandag
 
 I dag har jeg jobbet videre med å få koblet sammen applikasjonen som kjører i Kubernetes klusteret og Prometheus. Utfordringen var å få self-discovery funksjonaliteten til Prometheus til å _scrape_ applikasjonen vår på `<url>:8090/metrics`. Dette er viktig å få til at den blir automatisk oppdaget, på grunn av når man kjører applikasjoner i Kubernetes, kommer det til å bli laget og fjernet kontainerer dynamisk ettersom Kubernetes klusteret skalerer etter behov. Da blir det umulig å statisk konfigurere dette.
