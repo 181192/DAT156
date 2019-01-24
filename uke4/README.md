@@ -5,6 +5,19 @@ date: '2019-01-21'
 
 # Uke 4 - Dypt inn i skyene
 
+## Onsdag
+
+I dag har jeg fortsatt arbeidet med å sette opp pipelines og få deployet noen av kjerne bibliotekene våre til Azure Artifacts.
+Når jeg begynner å flytte biblioteker opp i Bitbucket Pipeline og Azure Artifacts vil moduler som blir bygget på den interne Jenkins serveren som har avhengigheter mot artefakter som ligger i Azure Artifacts feile. Derfor måtte jeg oppdatere `settings.xml` til Jenkins serveren slik at den får mulighet til å laste ned artefakter fra Azure Artifacts.
+
+Etter litt mer knoting for å fikse opp i avhengigheter og prøve å deploye noe dro jeg hjem. Når jeg kom hjem var jeg litt irritert over at dette ikke gikk etter planen og satt meg ned igjen. Da oppdager jeg (se bilde nedenfor) at det er en loop av avhengigheter. Dette fører til at uansett hvilken modul jeg vil deploye er de avhengig av hverandre. Ingen kan eksistere uten hverandre.
+
+![before](./before-loop.png)
+
+Jeg rakk ut til en kollega som fremdeles var aktiv på Slack, og til min store lykke er det kollegaen som har gjort denne buggen. Han foreslår å trekke ut koden `dd_core` bruker i `dd_test_util` (var bare en klasse) til en annen modul kalt `insight_utilities`. Resultatet ser du på bildet nedenfor.
+
+![after](./after-loop.png)
+
 ## Tirsdag
 
 Jobbet i dag med Azure Artifacts og Bitbucket Pipelines. Planen er å få deployet noen av kjerne bibliotekene vi bruker mest opp i Azure Artifacts. Jeg har pekt meg ut to biblioteker (en for backend og den andre for frontend) og en _`parent pom.xml`_ som holder kontroll over versjonene av fleste Maven dependencies som er felles for mange av modulene.
