@@ -5,6 +5,37 @@ date: '2019-01-21'
 
 # Uke 4 - Dypt inn i skyene
 
+[[toc]]
+
+## Torsdag
+
+Etter floken i går kveld, fikk jeg i dag deployet alle fem bibliotekene til Azure Artifacts og Bitbucket Pipelinen fungerer.
+`dd_server_location` kan også nå hente ut `paren POM` fra Azure Artifacts, så jeg kunne nå lukke ett par del-saker i Jira knyttet til prosjeket.
+
+### Kort om bygge prosessen "the old way"
+
+Utviklerne henter kode fra Bitbucket, kan bygge lokalt på maskinen for å teste (henter artefakter fra Nexus internt). Jenkins sjekker repoet på bitbucket med jevne mellomrom. Er det nye endringer start Jenkins bygge prosessen. Først kloner den prosjektet, bygger det, utfører API tester og deployer ut til test miljøene våre. Og lagrer alt som blir bygget i Nexus (jar-arkiver, war-arkiver, npm og Docker).
+
+![jenkins](./jenkins.png)
+
+### Kort om bygge prosessen for biblioteker og parent POM
+
+Dette er den nye pipelinen for biblioteker (jar-arkiv) og parent POM'er.
+
+Utviklerne henter kode fra Bitbucket, og artefakter fra Azure Artifacts og evt Nexus.
+
+Nye moduler blir nå bygget i Bitbucket Pipelines hver gang noen commiter. Byggingen bruker et spesielt docker bygg image, det blir også kjørt tester. Det blir da laget en SNAPSHOT versjon som blir lastet opp på Azure Artifacts. Når det er tid for å lage en release går man inn på Bitbucket og trykker _release_, dette er noe som kan skrues av slik at det alltid blir deployet en release. Release versjonen blir også lastet opp på Azure Artifacts.
+
+![artifacts](./artifacts.png)
+
+### Kort om bygge prosessen for moduler
+
+Samme situasjon for utvikleren som i sted. Men siden vi fremdeles vil beholde testmiljøene, og interne testingen mellom moduler, til alle modulene er deployet i Kubernetes bygges moduler på Jenkins.
+
+Det er først når Jenkins er ferdig og har tagget git loggen at Bitbucket Pipeline blir trigget. Da blir det bygget docker image, lastet opp til Azure Container Registry og Helm vil deploye det nye imaget til Kubernetes klusteret.
+
+![kubernetes](./kubernetes.png)
+
 ## Onsdag
 
 I dag har jeg fortsatt arbeidet med å sette opp pipelines og få deployet noen av kjerne bibliotekene våre til Azure Artifacts.
