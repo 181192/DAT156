@@ -5,7 +5,28 @@ date: '2019-01-21'
 
 # Uke 4 - Dypt inn i skyene
 
+::: tip Timer
+Denne uken: 48
+
+**Totalt: 141** :tada:
+:::
+
 [[toc]]
+
+## Fredag
+
+Jobbet i dag med å implementere DNS støtte til Kubernetes klusteret, slik at vi når ressursene i klusteret via en URL istedet for via IP adresser som kan endre seg.
+
+Domenet som brukte tilhører egentlig Stacc Flow, men jeg kunne få sette opp en DNS oppføring som ser slik ut `*.insight.stacctest.com`,
+denne DNS oppføringen inneholder ett _wildcard_ som gjør det slik vi kan enkelt ha mange miljøer opp mot dette domenet. Som for eksempel `beta.insight.stacctest.com` som da kan tilhøre vårt beta miljø.
+
+I Kubernetes klusteret for å dra nytte av dette måtte jeg fjerne last balanseren og inføre en Ingress kontroller. En Ingress er ett objekt i Kubernetes som lar oss koble oss til Kubernetes services utenfor klusteret. Ingress kontrolleren sender oss videre til en spesifikk tjeneste basert på regler.
+
+![ingress](./ingress.png)
+
+Jeg holdt også en presentasjon om de nye Bitbucket Pipelines, hvordan konfigurere Maven til å snakke med Azure Artifacts. Og kort om bygge prosessen mot Azure Artifacts, Azure Container Registry og Kubernetes.
+
+Presentasjonen inneholdt diagrammene fra gårsdagens innlegg. Jeg smekket i sammen en kjapp presentasjon med hjelp av [reveal.js](https://github.com/hakimel/reveal.js/), ett HTML presentasjons rammeverk som kjører på Node.js, som jeg også da deployet til Kubernetes for å demonstrere hvor langt prosjeket har kommet.
 
 ## Torsdag
 
