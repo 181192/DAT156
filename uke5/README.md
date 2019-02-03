@@ -5,6 +5,18 @@ date: '2019-01-28'
 
 # Uke 5 - JWT
 
+::: tip Timer
+Denne uken: 36
+
+**Totalt: 177** :tada:
+:::
+
+## Fredag
+
+Fredag ble brukt til å være med en av testerne på teamet mitt til en gjennomgang av Kreditt løsningen. Siden jeg nå jobber på _KredittTeam_ var det på tide å få en gjennomgang av hvordan løsningen fungerer. Jeg har jo tidligere holdt på med andre prosjekter som ikke er så relevant i forhold til det _KredittTeam_ faktisk jobber med. Vi har nettopp tatt en _cut fra master_ hvor vi skal levere en ny versjon til Eika. Det er denne som nå skal regresjonstestes, jeg holder på med en oppgave hvor det er en merkelig bug. Men på grunn av jeg ikke har domene kunnskapen om løsningen enda har det vært vanskelig, derfor slenger jeg meg med når en av testerne på teamet skal gå i gang.
+
+I løpet av en liten halvtime når jeg tar trykket litt rundt og blitt forklart hva dette handler om, finner jeg i tillegg til den buggen jeg jobber med, fire andre problemer som blir til to saker. Så her blir det mer jobb til mandag.
+
 ## Onsdag og Torsdag
 
 Jeg har jobbet med å få satt opp pipeline til JWT prosjeket. Prosjektet består av ett webprosjekt (war) og fire bibliotek. Webprosjektet skal bygges i Jenkins, også skal Bitbucket Pipeline lytte på en tag og deretter bygge Docker image og pushe det til Azure Container Registry. Bibliotekene skal bli publisert til Azure Artifacts på hver commit.
@@ -13,7 +25,7 @@ Jeg har jobbet med å få satt opp pipeline til JWT prosjeket. Prosjektet bestå
 
 Siden dette er ett monoprosjekt. Er det ønskelig at kun de modulene som blir påvirket/ har en endring, er de som blir oppdatert. Så her måtte det litt bash programmering til.
 
-Ett fint eksempel på å sjekke om det er gjort noe endringer i en mappe eller en fil mellom de to siste commitene, ser slik ut:
+Ett fint eksempel på å sjekke om det er gjort noe endringer i en mappe eller en fil mellom de to siste commitene, og kun printe ut filnavnene, ser slik ut:
 
 ```bash
 git diff --name-only --diff-filter=AMDR HEAD^ HEAD <fil eller mappenavn>
