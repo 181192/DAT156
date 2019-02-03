@@ -11,5 +11,8 @@
   },
   "dependencies": {
     "vuepress": "^0.14.8"
+  },
+  "resolutions": {
+    "terser": "3.14.1"
   }
 }
