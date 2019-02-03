@@ -5,6 +5,30 @@ date: '2019-01-28'
 
 # Uke 5 - JWT
 
+## Onsdag og Torsdag
+
+Jeg har jobbet med å få satt opp pipeline til JWT prosjeket. Prosjektet består av ett webprosjekt (war) og fire bibliotek. Webprosjektet skal bygges i Jenkins, også skal Bitbucket Pipeline lytte på en tag og deretter bygge Docker image og pushe det til Azure Container Registry. Bibliotekene skal bli publisert til Azure Artifacts på hver commit.
+
+![comp](./comp.png)
+
+Siden dette er ett monoprosjekt. Er det ønskelig at kun de modulene som blir påvirket/ har en endring, er de som blir oppdatert. Så her måtte det litt bash programmering til.
+
+Ett fint eksempel på å sjekke om det er gjort noe endringer i en mappe eller en fil mellom de to siste commitene, ser slik ut:
+
+```bash
+git diff --name-only --diff-filter=AMDR HEAD^ HEAD <fil eller mappenavn>
+```
+
+Også måtte jeg også finne alle undermapper med en `pom.xml` fil, som jeg kan putte inn i funksjonen over:
+
+```bash
+find . -name pom.xml -print0 | xargs -0 -n1 dirname rm | sort --unique | sed "s|^\./||" | tr '\n' ' ' | sed 's/^.\{2\}//'
+```
+
+Kommandoen over vil returnere en streng med alle undermapper som inneholder en `pom.xml` fil, hvor de er skilt med mellomrom. Det funker bra for en tabell i bash blir elementene skilt med mellomrom `array=(el1 el2 el3 el4)`
+
+Jeg gjorde også en endring med i stedet for å endre vår Parent POM til å samhandle med Azure (som gjør at vi må endre alle gamle moduler). Lager jeg nå en Azure POM, som er konfigurert til å snakke med Azure Artifacts, og oppdaterer heller de bibliotekene / modulene som skal bli flyttet med denne nye Parent POM'en.
+
 ## Tirsdag
 
 Litt diverse aktiviteter i dag, men hovedtrekkene var at _Veien mot Skyene_ prosjetet er satt litt på is. Jeg begynte å sette meg inn i ett nytt prosjekt kalt _JWT - Sikkerhet_, som handler om å bytte ut en eldre selvutviklet sikkerhetsløsning med OpenID Connect.
