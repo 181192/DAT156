@@ -9,7 +9,7 @@ module.exports = {
       { text: 'Stacc', link: 'https://stacc.com/' }
     ],
     sidebar: {
-      '/': ['/uke5/', '/uke4/', '/uke3/', '/uke2/', '/uke1/']
+      '/': ['/uke6/', '/uke5/', '/uke4/', '/uke3/', '/uke2/', '/uke1/']
     },
     lastUpdated: 'Sist oppdatert',
     serviceWorker: {
