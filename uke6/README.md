@@ -5,6 +5,42 @@ date: '2019-02-04'
 
 # Uke 6 - The mad girlfriend bug and GitOps
 
+::: tip Timer
+Denne uken: 42
+
+**Totalt: 219** :tada:
+:::
+
+[[toc]]
+
+## Fredag
+
+I dag har jeg jobbet med å ta neste modul opp i Kubernetes, modulen kalles _dd_server_domain_ og holder en oversikt over ulike domener som tilhører forskjellige banker. Denne modulen krever en database tilgang.
+
+Jeg startet med å sette opp en `Dockerfile` for å pakke modulen inn i en tomcat kontainer. Dette er samme kontaineren som jeg lagde til _dd_server_location_. Deretter fikk jeg den kontaineren til å koble seg til en database som jeg kjørte med `docker-compose`. Da var jeg sikker på at applikasjonen fungerte som den skulle, og det eneste som nå måtte endres når den kom oppi Kubernetes klusteret var miljøvariablene for `jdbc-url`, passord og brukernavn.
+
+Jeg hadde også med meg konsulenten i dag. Så han startet med å sette opp Helm chartet, mens jeg klargjorde Docker imaget og konfigurerte Bitbucket Pipeline.
+
+Vi satt opp en [Azure Database for MySQL](https://docs.microsoft.com/en-us/azure/mysql/) instans i Azure utenfor Klusteret, og lagde en test database som vi kan bruke for test klusteret vårt.
+
+Men så fikk vi latterlig mye problemer med å få database tilkoblingen til å fungere. Azure Database krever SSL som standard.
+
+En `jdbc-url` mot en MySQL database ser typisk slik ut,
+
+```
+jdbc:mysql://azure-database:3306/test?useSSL=true&requireSSL=false
+```
+
+og ligger inni Tomcat `server.xml` konfigurasjonen under `<Resource>` taggen med flere parametre som blandt annet brukernavn, passord og [c3p0](https://github.com/swaldman/c3p0) config. c3p0 er ett _concurrent JDBC Connection pooling library_.
+
+Det viste seg til slutt, etter _mye_ googling, at database connectoren til MySQL har en bug i versjon 5.1.19 som vi brukte, med å koble seg til databaser med SSL. Jeg oppgraderte til en nyere versjon 5.1.31 hvor dette er fikset, og vipps så fungerte det.
+
+Siden vi bruker [Liquibase](https://www.liquibase.org/), bygger database skjemaet seg automatisk. Dette gjør at vi ikke trenger å definere noe skjema, vi trenger bare å peke mot databasen så ordner applikasjonen resten. Ganske kult!
+
+Så tweaket vi litt mer med Helm Chartet, også lot jeg Flux ta over jobben slik at vi kjører etter GitOps prinsippene.
+
+Time antallet for praksisfaget (216 timer) er nå også nådd, så mulig dette er siste blogg innlegget.
+
 ## Torsdag
 
 I dag startet jeg endelig å jobbe med _Veien til Skyen_ prosjektet igjen. Konsulenten som har vært med meg tidligere kom i dag. I mens prosjektet har stått litt stille har jeg lest en del på fritiden om forskjellige teknologier og verktøy som hører hjemme i sky verdenen. Da kom jeg over ett konsept kalt GitOps, som stammer fra ordet DevOps.
