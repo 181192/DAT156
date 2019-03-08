@@ -10,9 +10,14 @@
     "prod": "vuepress build"
   },
   "dependencies": {
-    "vuepress": "^0.14.8"
+    "vuepress": "^0.14.8",
+    "mermaid": "^8.0.0"
   },
   "resolutions": {
     "terser": "3.14.1"
+  },
+  "devDependencies": {
+    "mermaid": "^8.0.0",
+    "vuepress": "^0.14.8"
   }
 }
